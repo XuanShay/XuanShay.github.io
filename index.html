@@ -14540,6 +14540,11 @@ a.anchor-link {
 <li>The dataset contains a list of video games with sales greater than 100,000 copies. The release year of the games are between 1980 and 2020</li>
 </ul>
 </li>
+<li>Steam database<ul>
+<li>Scraped from <a href="https://store.steampowered.com/stats/">https://store.steampowered.com/stats/</a></li>
+<li>The website introduced games with most steam users. It includes both current players and the peak of the day.</li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -14570,20 +14575,20 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Data-Generalization,-Extraction,-Transfrom,-and-Load">Data Generalization, Extraction, Transfrom, and Load<a class="anchor-link" href="#Data-Generalization,-Extraction,-Transfrom,-and-Load">&#182;</a></h2>
 </div>
-</div>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>For this project, we are going to utilize pandas first, so we import it here</p>
-
-</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install beautifulsoup4
+<span class="o">!</span>pip install requests
+<span class="o">!</span>pip install pandas
+<span class="o">!</span>pip install numpy
+<span class="o">!</span>pip install html5lib
+<span class="o">!</span>pip3 install lxml
+
+<span class="o">!</span>pip install html5lib
 </pre></div>
 
      </div>
@@ -14599,21 +14604,110 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>pandas.core.frame.DataFrame</pre>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: beautifulsoup4 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (4.10.0)
+Requirement already satisfied: soupsieve&gt;1.2 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from beautifulsoup4) (2.2.1)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: requests in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (2.26.0)
+Requirement already satisfied: charset-normalizer~=2.0.0 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from requests) (2.0.7)
+Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from requests) (1.26.7)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from requests) (3.3)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from requests) (2021.10.8)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: pandas in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (1.3.4)
+Requirement already satisfied: python-dateutil&gt;=2.7.3 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from pandas) (2.8.2)
+Requirement already satisfied: numpy&gt;=1.17.3 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from pandas) (1.21.3)
+Requirement already satisfied: pytz&gt;=2017.3 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from pandas) (2021.3)
+Requirement already satisfied: six&gt;=1.5 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from python-dateutil&gt;=2.7.3-&gt;pandas) (1.16.0)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: numpy in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (1.21.3)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: html5lib in /Users/whw/Library/Python/3.9/lib/python/site-packages (1.1)
+Requirement already satisfied: six&gt;=1.9 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from html5lib) (1.16.0)
+Requirement already satisfied: webencodings in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from html5lib) (0.5.1)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: lxml in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (4.6.3)
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: html5lib in /Users/whw/Library/Python/3.9/lib/python/site-packages (1.1)
+Requirement already satisfied: webencodings in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from html5lib) (0.5.1)
+Requirement already satisfied: six&gt;=1.9 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from html5lib) (1.16.0)
+</pre>
+</div>
 </div>
 
 </div>
 
 </div>
 
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>pip install html5lib
+</pre></div>
+
+     </div>
+</div>
+</div>
 </div>
 
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: html5lib in /Users/whw/Library/Python/3.9/lib/python/site-packages (1.1)
+Requirement already satisfied: webencodings in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from html5lib) (0.5.1)
+Requirement already satisfied: six&gt;=1.9 in /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages (from html5lib) (1.16.0)
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#%matplotlib inline</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">lxml</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">html5lib</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Data-Set-1:-Video-Games-Slaes">Data Set 1: Video Games Slaes<a class="anchor-link" href="#Data-Set-1:-Video-Games-Slaes">&#182;</a></h3>
+</div>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
@@ -14765,19 +14859,94 @@ a.anchor-link {
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>For now we only got one dataset to work with, we will see if there are any futher question we want to explore more.
-There are some insight about this dataset that we might be interested and answer some question we mention in our plan document.</p>
-<p>One quick example of that will be "What are those games published by Ubisoft?"</p>
+<p>Question 1:
+How does the shares of the market between different companies change during the past decade? (*inner cause? e.g. A great game realse?)</p>
+<p>We plan to find out each publisher's game sales since 2010 till whenever we have data (2017 in this case). We will then merge the information by ploting the data out and visualize the change of shares of market by each company. Moreover, we can select those companies with a peak in game sales and dig out which game is remarkable</p>
 
 </div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Games0</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vgs</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2010</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">Games1</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vgs</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2011</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">Games2</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vgs</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2012</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">Games3</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vgs</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2013</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">Games4</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vgs</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2014</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">Games5</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vgs</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2015</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">Games6</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vgs</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2016</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">Games7</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vgs</span><span class="p">[</span><span class="s2">&quot;Year&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">2017</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>A quick peek on some year</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Games0</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>Publisher
+505 Games                                 14.26
+5pb                                        0.29
+7G//AMES                                   0.01
+ASCII Media Works                          0.12
+Abylight                                   0.08
+                                          ...  
+Virtual Play Games                         0.06
+Warner Bros. Interactive Entertainment    15.57
+XS Games                                   0.24
+Yeti                                       0.11
+Zoo Games                                  1.10
+Name: Global_Sales, Length: 142, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ubi</span> <span class="o">=</span> <span class="n">vgs</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;Publisher&quot;</span><span class="p">)</span>
-<span class="n">ubi</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;Ubisoft&quot;</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Games3</span>
 </pre></div>
 
      </div>
@@ -14794,6 +14963,477 @@ There are some insight about this dataset that we might be interested and answer
 
     
     <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>Publisher
+505 Games                                  2.31
+5pb                                        0.14
+Activision                                43.49
+Aerosoft                                   0.02
+Agatsuma Entertainment                     0.03
+                                          ...  
+Trion Worlds                               1.14
+Ubisoft                                   27.39
+Unknown                                    0.06
+Warner Bros. Interactive Entertainment    20.36
+Xseed Games                                0.19
+Name: Global_Sales, Length: 76, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Question2: Is there a difference in consumer's preference throughout different regions?
+We plan to investigate each Genre of game's sales in different regions. By summing the sales, we can find out the greatest selling genre in each region. For the futher analysis, we will compare each genre's proportion with its own region latter and visualize it.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Games6</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>Publisher
+505 Games                                 0.54
+5pb                                       0.04
+Activision                                3.67
+Aksys Games                               0.12
+Alternative Software                      0.11
+                                          ... 
+Ubisoft                                   9.76
+Unknown                                   0.16
+Warner Bros. Interactive Entertainment    3.52
+Yeti                                      0.02
+dramatic create                           0.03
+Name: Global_Sales, Length: 68, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">NA</span><span class="o">=</span><span class="n">vgs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Genre&quot;</span><span class="p">)[</span><span class="s2">&quot;NA_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">EU</span><span class="o">=</span><span class="n">vgs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Genre&quot;</span><span class="p">)[</span><span class="s2">&quot;EU_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">JP</span><span class="o">=</span><span class="n">vgs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Genre&quot;</span><span class="p">)[</span><span class="s2">&quot;JP_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">Other</span><span class="o">=</span><span class="n">vgs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Genre&quot;</span><span class="p">)[</span><span class="s2">&quot;Other_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">NA</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>Genre
+Action          877.83
+Adventure       105.80
+Fighting        223.59
+Misc            410.24
+Platform        447.05
+Puzzle          123.78
+Racing          359.42
+Role-Playing    327.28
+Shooter         582.60
+Simulation      183.31
+Sports          683.35
+Strategy         68.70
+Name: NA_Sales, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">EU</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>Genre
+Action          525.00
+Adventure        64.13
+Fighting        101.32
+Misc            215.98
+Platform        201.63
+Puzzle           50.78
+Racing          238.39
+Role-Playing    188.06
+Shooter         313.27
+Simulation      113.38
+Sports          376.85
+Strategy         45.34
+Name: EU_Sales, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">JP</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>Genre
+Action          159.95
+Adventure        52.07
+Fighting         87.35
+Misc            107.76
+Platform        130.77
+Puzzle           57.31
+Racing           56.69
+Role-Playing    352.31
+Shooter          38.28
+Simulation       63.70
+Sports          135.37
+Strategy         49.46
+Name: JP_Sales, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">Other</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>Genre
+Action          187.38
+Adventure        16.81
+Fighting         36.68
+Misc             75.32
+Platform         51.59
+Puzzle           12.55
+Racing           77.27
+Role-Playing     59.61
+Shooter         102.69
+Simulation       31.52
+Sports          134.97
+Strategy         11.36
+Name: Other_Sales, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Question3: The different in size of the market of different platforms?</p>
+<p>Our plan is to find out the total sales of each game in every platform in this dataset, but we might meet a trouble here since Game quality is a factor influencing sales. The sales can't explain everything about a size of the market. We will see if we can find another dataset or a better way to analysis our data.</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">platform</span><span class="o">=</span><span class="n">vgs</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Platform&quot;</span><span class="p">)[</span><span class="s2">&quot;Global_Sales&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">platform</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>Platform
+2600      97.08
+3DO        0.10
+3DS      247.46
+DC        15.97
+DS       822.49
+GB       255.45
+GBA      318.50
+GC       199.36
+GEN       28.36
+GG         0.04
+N64      218.88
+NES      251.07
+NG         1.44
+PC       258.82
+PCFX       0.03
+PS       730.66
+PS2     1255.64
+PS3      957.84
+PS4      278.10
+PSP      296.28
+PSV       61.93
+SAT       33.59
+SCD        1.87
+SNES     200.05
+TG16       0.16
+WS         1.42
+Wii      926.71
+WiiU      81.86
+X360     979.96
+XB       258.26
+XOne     141.06
+Name: Global_Sales, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="Data-Set-2:-Steam-database">Data Set 2: Steam database<a class="anchor-link" href="#Data-Set-2:-Steam-database">&#182;</a></h3>
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>First, we scrap and generate the dataframe using several pandas functions</p>
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[51]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">header</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36&#39;</span><span class="p">}</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://store.steampowered.com/stats/&#39;</span><span class="p">,</span><span class="n">headers</span><span class="o">=</span><span class="n">header</span><span class="p">)</span>
+<span class="n">resource</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[52]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">souped_resource</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">resource</span><span class="p">,</span><span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+<span class="n">prettify_resource</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="o">.</span><span class="n">prettify</span><span class="p">(</span><span class="n">souped_resource</span><span class="p">)</span>
+<span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">prettify_resource</span><span class="p">)</span>
+<span class="n">table_found</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">,{</span><span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="s2">&quot;detailStats&quot;</span><span class="p">})</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[70]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_html</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">table_found</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[71]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_steam</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[72]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_steam</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[72]:</div>
 
 
 
@@ -14816,178 +15456,112 @@ There are some insight about this dataset that we might be interested and answer
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Rank</th>
-      <th>Name</th>
-      <th>Platform</th>
-      <th>Year</th>
-      <th>Genre</th>
-      <th>NA_Sales</th>
-      <th>EU_Sales</th>
-      <th>JP_Sales</th>
-      <th>Other_Sales</th>
-      <th>Global_Sales</th>
-    </tr>
-    <tr>
-      <th>Publisher</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>Ubisoft</th>
-      <td>61</td>
-      <td>Just Dance 3</td>
-      <td>Wii</td>
-      <td>2011.0</td>
-      <td>Misc</td>
-      <td>6.05</td>
-      <td>3.15</td>
-      <td>0.00</td>
-      <td>1.07</td>
-      <td>10.26</td>
+      <th>0</th>
+      <td>Current Players</td>
+      <td>Peak Today</td>
+      <td>NaN</td>
+      <td>Game</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>69</td>
-      <td>Just Dance 2</td>
-      <td>Wii</td>
-      <td>2010.0</td>
-      <td>Misc</td>
-      <td>5.84</td>
-      <td>2.89</td>
-      <td>0.01</td>
-      <td>0.78</td>
-      <td>9.52</td>
+      <th>1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>103</td>
-      <td>Just Dance</td>
-      <td>Wii</td>
-      <td>2009.0</td>
-      <td>Misc</td>
-      <td>3.51</td>
-      <td>3.03</td>
-      <td>0.00</td>
-      <td>0.73</td>
-      <td>7.27</td>
+      <th>2</th>
+      <td>316599</td>
+      <td>664867</td>
+      <td>NaN</td>
+      <td>Dota 2</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>112</td>
-      <td>Just Dance 4</td>
-      <td>Wii</td>
-      <td>2012.0</td>
-      <td>Misc</td>
-      <td>4.14</td>
-      <td>2.21</td>
-      <td>0.00</td>
-      <td>0.56</td>
-      <td>6.91</td>
+      <th>3</th>
+      <td>311149</td>
+      <td>770805</td>
+      <td>NaN</td>
+      <td>Counter-Strike: Global Offensive</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>129</td>
-      <td>Assassin's Creed III</td>
-      <td>PS3</td>
-      <td>2012.0</td>
-      <td>Action</td>
-      <td>2.64</td>
-      <td>2.56</td>
-      <td>0.16</td>
-      <td>1.14</td>
-      <td>6.50</td>
+      <th>4</th>
+      <td>139970</td>
+      <td>323384</td>
+      <td>NaN</td>
+      <td>PUBG: BATTLEGROUNDS</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
+      <th>5</th>
+      <td>98673</td>
+      <td>245629</td>
+      <td>NaN</td>
+      <td>Apex Legends</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>16508</td>
-      <td>Rabbids Invasion: The Interactive TV Show</td>
-      <td>XOne</td>
-      <td>2014.0</td>
-      <td>Misc</td>
-      <td>0.00</td>
-      <td>0.01</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.01</td>
+      <th>6</th>
+      <td>67088</td>
+      <td>84295</td>
+      <td>NaN</td>
+      <td>Team Fortress 2</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>16517</td>
-      <td>National Geographic Panda (JP sales)</td>
-      <td>DS</td>
-      <td>2008.0</td>
-      <td>Simulation</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.01</td>
-      <td>0.00</td>
-      <td>0.01</td>
+      <th>7</th>
+      <td>59099</td>
+      <td>61894</td>
+      <td>NaN</td>
+      <td>MIR4</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>16547</td>
-      <td>Imagine Figure Skater (JP sales)</td>
-      <td>DS</td>
-      <td>2007.0</td>
-      <td>Sports</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.01</td>
-      <td>0.00</td>
-      <td>0.01</td>
+      <th>8</th>
+      <td>53030</td>
+      <td>109484</td>
+      <td>NaN</td>
+      <td>Grand Theft Auto V</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>16587</td>
-      <td>Bust-A-Move 3000</td>
-      <td>GC</td>
-      <td>2003.0</td>
-      <td>Puzzle</td>
-      <td>0.01</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.01</td>
+      <th>9</th>
+      <td>42082</td>
+      <td>108245</td>
+      <td>NaN</td>
+      <td>NARAKA: BLADEPOINT</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>Ubisoft</th>
-      <td>16594</td>
-      <td>Myst IV: Revelation</td>
-      <td>PC</td>
-      <td>2004.0</td>
-      <td>Adventure</td>
-      <td>0.01</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.00</td>
-      <td>0.01</td>
+      <th>10</th>
+      <td>41370</td>
+      <td>63145</td>
+      <td>NaN</td>
+      <td>Wallpaper Engine</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>38917</td>
+      <td>67264</td>
+      <td>NaN</td>
+      <td>Destiny 2</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
-<p>921 rows × 10 columns</p>
 </div>
 </div>
 
@@ -15000,15 +15574,171 @@ There are some insight about this dataset that we might be interested and answer
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[73]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_steam</span> <span class="o">=</span> <span class="n">df_steam</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
 </pre></div>
 
      </div>
 </div>
 </div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[74]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_steam</span> <span class="o">=</span><span class="n">df_steam</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">df_steam</span> <span class="o">=</span><span class="n">df_steam</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[75]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_steam</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Current Players&#39;</span><span class="p">,</span><span class="s1">&#39;Peak Today&#39;</span><span class="p">,</span><span class="s1">&#39;Game&#39;</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[76]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_steam</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[76]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Current Players</th>
+      <th>Peak Today</th>
+      <th>Game</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>316599</td>
+      <td>664867</td>
+      <td>Dota 2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>311149</td>
+      <td>770805</td>
+      <td>Counter-Strike: Global Offensive</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>139970</td>
+      <td>323384</td>
+      <td>PUBG: BATTLEGROUNDS</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>98673</td>
+      <td>245629</td>
+      <td>Apex Legends</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>67088</td>
+      <td>84295</td>
+      <td>Team Fortress 2</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>59099</td>
+      <td>61894</td>
+      <td>MIR4</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>53030</td>
+      <td>109484</td>
+      <td>Grand Theft Auto V</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>42082</td>
+      <td>108245</td>
+      <td>NARAKA: BLADEPOINT</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>41370</td>
+      <td>63145</td>
+      <td>Wallpaper Engine</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>38917</td>
+      <td>67264</td>
+      <td>Destiny 2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 </div>
